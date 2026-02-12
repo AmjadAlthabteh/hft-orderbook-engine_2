@@ -49,25 +49,3 @@ Start debugger:
 Set breakpoint:
 
     break main
-
-Run:
-
-    run
-
-View call stack:
-
-    backtrace
-
-Exit:
-
-    quit
-
-
-Notes:
-------
-- Ensure all .cpp files are in the same directory.
-- Remove build artifacts before committing:
-    *.exe
-    *.obj
-    *.pdb
-    *.log
