@@ -132,7 +132,7 @@
     <ClCompile Include="OrderBook.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="idea_algo.txt" />
+    <Text Include="Build.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HFTUtils.hpp" />

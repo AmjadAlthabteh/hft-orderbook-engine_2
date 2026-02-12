@@ -29,7 +29,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="idea_algo.txt">
+    <Text Include="Build.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

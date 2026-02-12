@@ -1,0 +1,73 @@
+
+
+
+-- MatchingEngine is the matching algoriithm logic 
+
+HFT Order Book Engine
+Build Instructions
+==========================
+
+Requirements:
+-------------
+- g++ (GCC 9+ recommended)
+- C++20 support
+
+Check compiler version:
+    g++ --version
+
+
+Build (Release Mode):
+---------------------
+
+From the project root directory:
+
+    g++ -std=c++20 *.cpp -O2 -Wall -o engine.exe
+
+Run:
+
+    .\engine.exe        (Windows PowerShell)
+    ./engine            (Linux / Mac)
+
+
+Build (Debug Mode):
+-------------------
+
+    g++ -std=c++20 *.cpp -g -O0 -Wall -o engine_debug.exe
+
+Run Debug Version:
+
+    .\engine_debug.exe
+
+
+Using gdb (Optional):
+---------------------
+
+Start debugger:
+
+    gdb engine_debug.exe
+
+Set breakpoint:
+
+    break main
+
+Run:
+
+    run
+
+View call stack:
+
+    backtrace
+
+Exit:
+
+    quit
+
+
+Notes:
+------
+- Ensure all .cpp files are in the same directory.
+- Remove build artifacts before committing:
+    *.exe
+    *.obj
+    *.pdb
+    *.log
