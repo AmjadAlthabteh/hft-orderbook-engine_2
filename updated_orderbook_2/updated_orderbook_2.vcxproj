@@ -117,6 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,6 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HFTAlgorithms.cpp" />
     <ClCompile Include="HFTUtils.cpp">
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp23</LanguageStandard>
     </ClCompile>
@@ -135,6 +137,7 @@
     <Text Include="Build.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HFTAlgorithms.hpp" />
     <ClInclude Include="HFTUtils.hpp" />
     <ClInclude Include="MatchingEngine.hpp" />
     <ClInclude Include="OrderBook.hpp" />

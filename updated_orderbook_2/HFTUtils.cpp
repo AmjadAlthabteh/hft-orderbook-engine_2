@@ -1,47 +1,79 @@
-#include "HFTUtils.hpp"
-#include <iostream>
+#pragma once
 
-namespace HFT
+#include <chrono>
+#include <cstdint>
+#include <cmath>
+#include <string>
+
+namespace hft
 {
 
-    std::uint64_t measureLatency(
-        const std::function<void()>& func) noexcept
+    // ==============================
+    // CONSTANTS
+    // ==============================
+
+    constexpr double EPSILON = 1e-9;
+    constexpr size_t CACHE_LINE_SIZE = 64;
+
+    // ==============================
+    // NUMERICAL HELPERS
+    // ==============================
+
+    bool almostEqual(double a, double b, double eps = EPSILON);
+    double normalizeToTick(double price, double tickSize);
+
+
+
+    bool validateOrder(double price,
+        uint64_t quantity,
+        double maxPrice,
+        uint64_t maxQty);
+
+
+
+    using Clock = std::chrono::high_resolution_clock;
+    using TimePoint = std::chrono::time_point<Clock>;
+
+    TimePoint now();
+
+
+    class LatencyTimer
     {
-        auto start =
-            std::chrono::high_resolution_clock::now();
+    public:
+        void start();
+        void stop();
 
-        func();
+        double elapsedNanoseconds() const;
+        double elapsedMicroseconds() const;
+        double elapsedMilliseconds() const;
 
-        auto end =
-            std::chrono::high_resolution_clock::now();
+    private:
+        TimePoint startTime;
+        TimePoint endTime;
+    };
 
-        return std::chrono::duration_cast<
-            std::chrono::nanoseconds>(end - start).count();
-    }
+    // PNL
 
-    void runBenchmark(
-        const std::function<void()>& func,
-        std::size_t iterations) noexcept
+    double calculatePnL(double entryPrice,
+        double exitPrice,
+        uint64_t quantity,
+        bool isLong);
+
+
+    struct alignas(CACHE_LINE_SIZE) AlignedCounter
     {
-        auto start =
-            std::chrono::high_resolution_clock::now();
+        uint64_t value = 0;
+    };
 
-        for (std::size_t i = 0; i < iterations; ++i)
-        {
-            if ( i < iterations)
-                func();
-        }
+    class PerformanceCounter
+    {
+    public:
+        void increment();
+        uint64_t get() const;
+        void reset();
 
-        auto end =
-            std::chrono::high_resolution_clock::now();
+    private:
+        AlignedCounter counter;
+    };
 
-        auto duration =
-            std::chrono::duration_cast<
-            std::chrono::microseconds>(end - start).count();
-
-        std::cout << "Benchmark Time: "
-            << duration
-            << " microseconds\n";
-    }
-
-}
+} // namespace hft

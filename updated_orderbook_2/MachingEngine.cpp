@@ -1,90 +1,82 @@
 #include "MatchingEngine.hpp"
-#include <algorithm>
 #include <iostream>
 
-/*
-    match()
-
-    Executes trades while:
-    bestBid >= bestAsk
-
-    - FIFO preserved via deque
-    - No printing in hot loop
-    - Aggregates trade statistics
-*/
-void MatchingEngine::match() noexcept
+namespace hft
 {
-    auto& bids = book.getBids();
-    auto& asks = book.getAsks();
 
-    while (!bids.empty() && !asks.empty())
+    // ============================================================
+    // CONSTRUCTOR
+
+    MatchingEngine::MatchingEngine()
+        : nextOrderId(1)   // Start IDs at 1
     {
-        auto& [bidPrice, bidLevel] = *bids.begin();
-        auto& [askPrice, askLevel] = *asks.begin();
-
-        auto& bestBid = bidLevel.front();
-        auto& bestAsk = askLevel.front();
-
-        // Stop if spread does not cross
-        if (bestBid.price < bestAsk.price)
-            break;
-
-        OrderBook::Quantity tradeQty =
-            std::min(bestBid.quantity, bestAsk.quantity);
-
-        // Update stats (NO printing here)
-        totalTrades++;
-        totalVolume += tradeQty;
-        totalNotional += tradeQty * askPrice;
-
-        // Reduce quantities
-        bestBid.quantity -= tradeQty;
-        bestAsk.quantity -= tradeQty;
-
-        // Remove filled orders
-        if (bestBid.quantity == 0)
-        {
-            bidLevel.pop_front();
-            if (bidLevel.empty())
-                bids.erase(bidPrice);
-        }
-
-        if (bestAsk.quantity == 0)
-        {
-            askLevel.pop_front();
-            if (askLevel.empty())
-                asks.erase(askPrice);
-        }
     }
-}
 
-/*
-    Resets statistics (useful between benchmark runs)
-*/
-void MatchingEngine::resetStats() noexcept
-{
-    totalTrades = 0;
-    totalVolume = 0;
-    totalNotional = 0.0;
-}
+    
 
-/*
-    Volume Weighted Average Price
-*/
-double MatchingEngine::vwap() const noexcept
-{
-    if (totalVolume == 0)
-        return 0.0;
+    uint64_t MatchingEngine::submitOrder(Side side,
+        OrderType type,
+        double price,
+        uint64_t quantity)
+    {
+        /*
+            This function acts as the public API
+            for submitting new orders into the system.
 
-    return totalNotional / static_cast<double>(totalVolume);
-}
+            In a real exchange this would:
+                - Validate risk
+                - Check margin
+                - Validate price bands
+                - Timestamp at gateway
+                - Pass to matching engine thread
+        */
 
-/*
-    Clean output summary
-*/
-void MatchingEngine::printSummary() const noexcept
-{
-    std::cout << "Total Trades   : " << totalTrades << "\n";
-    std::cout << "Total Volume   : " << totalVolume << "\n";
-    std::cout << "VWAP           : " << vwap() << "\n";
-}
+        uint64_t orderId = nextOrderId.fetch_add(1, std::memory_order_relaxed);
+
+        Order order(orderId, side, type, price, quantity);
+
+        orderBook.addOrder(order);
+
+        // Pull latest trades from book
+        tradeCache = orderBook.match();
+
+        return orderId;
+    }
+
+    const std::vector<Trade>& MatchingEngine::getTrades() const
+    {
+        return tradeCache;
+    }
+
+  
+
+    void MatchingEngine::printTopOfBook() const
+    {
+        orderBook.printTopOfBook();
+    }
+
+    void MatchingEngine::printFullDepth() const
+    {
+        orderBook.printFullDepth();
+    }
+
+
+    void MatchingEngine::reset()
+    {
+        /*
+            Clears:
+                - Order book
+                - Trade history
+                - Resets order IDs
+
+            Useful for:
+                - Backtesting
+                - Simulation runs
+        */
+
+        orderBook.clear();
+        tradeCache.clear();
+        nextOrderId.store(1, std::memory_order_relaxed);
+    }
+
+} // namespace hft

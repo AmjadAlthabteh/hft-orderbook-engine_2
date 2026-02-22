@@ -1,37 +1,60 @@
 #pragma once
 
 #include "OrderBook.hpp"
-#include <cstdint>
+#include <atomic>
+#include <vector>
 
 /*
-    MatchingEngine
+* 
 
-    Responsible for:
-    - Price-time priority matching
-    - Trade aggregation
-    - Performance-safe execution (no I/O in hot path)
+    Responsibilities:
+
+    Order submission interface
+    Order ID generation
+   Interaction with OrderBook
+    Trade reporting
+    High-level control layer
+
+    This sits above OrderBook and would normally
+    connect to:
+        - Risk Manager
+        - Network Gateway
+        - Logging system
+        - Market Data Feed
 */
 
-class MatchingEngine {
-private:
-    OrderBook& book;
+namespace hft
+{
 
-    // ---- Trade Statistics ----
-    std::uint64_t totalTrades{ 0 };
-    std::uint64_t totalVolume{ 0 };
-    double totalNotional{ 0.0 };   // sum(price * quantity)
+    class MatchingEngine
+    {
+    public:
 
-public:
-    explicit MatchingEngine(OrderBook& ob) noexcept
-        : book(ob) {
-    }
+        MatchingEngine();
 
-    void match() noexcept;
+        // Submit order (auto ID generation)
+        uint64_t submitOrder(Side side,
+            OrderType type,
+            double price,
+            uint64_t quantity);
 
-    void resetStats() noexcept;
+        // Access trades
+        const std::vector<Trade>& getTrades() const;
 
-    void printSummary() const noexcept;
+        // Market data access
+        void printTopOfBook() const;
+        void printFullDepth() const;
 
-    [[nodiscard]]
-    double vwap() const noexcept;
-};
+        void reset();
+
+    private:
+
+        OrderBook orderBook;
+
+        // Thread-safe ID generator
+        std::atomic<uint64_t> nextOrderId;
+
+        std::vector<Trade> tradeCache;
+    };
+
+} // namespace hft
