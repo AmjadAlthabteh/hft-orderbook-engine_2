@@ -21,7 +21,7 @@
     <ClCompile Include="OrderBook.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MachingEngine.cpp">
+    <ClCompile Include="MatchingEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">

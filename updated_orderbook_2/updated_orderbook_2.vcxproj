@@ -129,7 +129,7 @@
     <ClCompile Include="HFTUtils.cpp">
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp23</LanguageStandard>
     </ClCompile>
-    <ClCompile Include="MachingEngine.cpp" />
+    <ClCompile Include="MatchingEngine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OrderBook.cpp" />
   </ItemGroup>
