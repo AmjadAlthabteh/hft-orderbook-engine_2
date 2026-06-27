@@ -6,15 +6,17 @@
 namespace hft
 {
 
-    void OrderBook::addOrder(const Order& order)
+    void OrderBook::addOrder(Order order)
     {
         if (order.side == Side::Buy)
         {
-            bids[order.price].addOrder(order);
+            const double price = order.price;
+            bids[price].addOrder(std::move(order));
         }
         else
         {
-            asks[order.price].addOrder(order);
+            const double price = order.price;
+            asks[price].addOrder(std::move(order));
         }
 
         // Immediately attempt matching after insertion
@@ -83,6 +85,11 @@ namespace hft
     // ============================================================
 
     std::vector<Trade> OrderBook::match()
+    {
+        return trades;
+    }
+
+    const std::vector<Trade>& OrderBook::getTrades() const noexcept
     {
         return trades;
     }

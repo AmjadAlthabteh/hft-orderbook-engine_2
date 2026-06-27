@@ -35,17 +35,14 @@ namespace hft
 
         Order order(orderId, side, type, price, quantity);
 
-        orderBook.addOrder(order);
-
-        // Pull latest trades from book
-        tradeCache = orderBook.match();
+        orderBook.addOrder(std::move(order));
 
         return orderId;
     }
 
     const std::vector<Trade>& MatchingEngine::getTrades() const
     {
-        return tradeCache;
+        return orderBook.getTrades();
     }
 
   
@@ -58,6 +55,11 @@ namespace hft
     void MatchingEngine::printFullDepth() const
     {
         orderBook.printFullDepth();
+    }
+
+    const OrderBook& MatchingEngine::getOrderBook() const noexcept
+    {
+        return orderBook;
     }
 
 
@@ -75,7 +77,6 @@ namespace hft
         */
 
         orderBook.clear();
-        tradeCache.clear();
         nextOrderId.store(1, std::memory_order_relaxed);
     }
 

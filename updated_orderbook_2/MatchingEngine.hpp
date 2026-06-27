@@ -44,6 +44,7 @@ namespace hft
         // Market data access
         void printTopOfBook() const;
         void printFullDepth() const;
+        const OrderBook& getOrderBook() const noexcept;
 
         void reset();
 
@@ -54,7 +55,6 @@ namespace hft
         // Thread-safe ID generator
         std::atomic<uint64_t> nextOrderId;
 
-        std::vector<Trade> tradeCache;
     };
 
 } // namespace hft

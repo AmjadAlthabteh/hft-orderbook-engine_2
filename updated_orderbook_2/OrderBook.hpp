@@ -8,6 +8,7 @@
 #include <functional>
 #include <optional>
 #include <iostream>
+#include <utility>
 
 /*
     ==========================================================
@@ -103,10 +104,10 @@ namespace hft
         std::deque<Order> orders;
         uint64_t totalVolume = 0;
 
-        void addOrder(const Order& order)
+        void addOrder(Order order)
         {
-            orders.push_back(order);
             totalVolume += order.quantity;
+            orders.push_back(std::move(order));
         }
 
         void reduceFront(uint64_t qty)
@@ -139,10 +140,12 @@ namespace hft
         OrderBook() = default;
 
         // Order entry
-        void addOrder(const Order& order);
+        void addOrder(Order order);
 
         // Matching engine trigger
         std::vector<Trade> match();
+
+        const std::vector<Trade>& getTrades() const noexcept;
 
         // Market data
         double getBestBid() const;
