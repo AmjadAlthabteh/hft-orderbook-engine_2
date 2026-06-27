@@ -21,7 +21,7 @@ Build (Release Mode):
 
 From the project root directory:
 
-    g++ -std=c++20 *.cpp -O2 -Wall -o engine.exe
+    g++ -std=c++20 *.cpp -O2 -Wall -Wextra -pedantic -o engine.exe
 
 Run:
 
@@ -32,7 +32,7 @@ Run:
 Build (Debug Mode):
 -------------------
 
-    g++ -std=c++20 *.cpp -g -O0 -Wall -o engine_debug.exe
+    g++ -std=c++20 *.cpp -g -O0 -Wall -Wextra -pedantic -o engine_debug.exe
 
 Run Debug Version:
 

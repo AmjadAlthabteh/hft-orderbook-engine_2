@@ -10,4 +10,6 @@ Features:
 - VWAP calculation
 - Benchmark utilities
 - Cache-aligned structures
+- No-copy trade history access
+- CMake and Visual Studio build support
 - Modern C++20 design
