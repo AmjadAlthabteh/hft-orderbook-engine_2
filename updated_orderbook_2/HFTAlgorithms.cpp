@@ -11,14 +11,13 @@ namespace hft
 
     double HFTAlgorithms::computeOrderImbalance(const OrderBook& book)
     {
-        uint64_t bidVol = book.getTotalBidVolume();
-        uint64_t askVol = book.getTotalAskVolume();
+        const double bidVol = static_cast<double>(book.getTotalBidVolume());
+        const double askVol = static_cast<double>(book.getTotalAskVolume());
 
         if (bidVol + askVol == 0)
             return 0.0;
 
-        return static_cast<double>(bidVol - askVol) /
-            static_cast<double>(bidVol + askVol);
+        return (bidVol - askVol) / (bidVol + askVol);
     }
 
     // ============================================================
