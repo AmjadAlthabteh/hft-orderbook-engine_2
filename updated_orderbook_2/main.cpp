@@ -67,10 +67,7 @@ int main()
 
 
     std::cout << "\n";
-    HFTAlgorithms::printAnalytics(engine.getTrades().empty()
-        ? OrderBook()
-        : *(new OrderBook()), // placeholder safety
-        trades);
+    HFTAlgorithms::printAnalytics(engine.getOrderBook(), trades);
 
 
     std::cout << "\n====== PERFORMANCE ======\n";
@@ -79,6 +76,16 @@ int main()
 
     std::cout << "Execution Time (nanoseconds):  "
         << timer.elapsedNanoseconds() << "\n";
+
+    const auto benchmarkMicros = runBenchmark([&]()
+        {
+            MatchingEngine benchmarkEngine;
+            benchmarkEngine.submitOrder(Side::Sell, OrderType::Limit, 100.0, 10);
+            benchmarkEngine.submitOrder(Side::Buy, OrderType::Limit, 100.0, 10);
+        }, 1000);
+
+    std::cout << "Benchmark Time (microseconds): "
+        << benchmarkMicros << "\n";
 
     std::cout << "\nSimulation Complete.\n";
 
