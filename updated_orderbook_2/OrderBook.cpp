@@ -1,4 +1,5 @@
 #include "OrderBook.hpp"
+#include <algorithm>
 
 
 //Implemented a price-time priority matching engine in modern C++ supporting depth aggregation, partial //fills, and VWAP tracking with exchange-realistic trade execution logic.
@@ -8,6 +9,12 @@ namespace hft
 
     void OrderBook::addOrder(Order order)
     {
+        if (order.type == OrderType::Market)
+        {
+            executeMarketOrder(std::move(order));
+            return;
+        }
+
         if (order.side == Side::Buy)
         {
             const double price = order.price;
@@ -21,6 +28,60 @@ namespace hft
 
         // Immediately attempt matching after insertion
         matchOrders();
+    }
+
+    void OrderBook::executeMarketOrder(Order order)
+    {
+        if (order.side == Side::Buy)
+        {
+            while (order.quantity > 0 && !asks.empty())
+            {
+                auto askIt = asks.begin();
+                PriceLevel& askLevel = askIt->second;
+                Order& sellOrder = askLevel.orders.front();
+
+                const uint64_t tradeQty = std::min(order.quantity, sellOrder.quantity);
+
+                trades.push_back({
+                    order.id,
+                    sellOrder.id,
+                    askIt->first,
+                    tradeQty,
+                    std::chrono::steady_clock::now()
+                    });
+
+                order.quantity -= tradeQty;
+                askLevel.reduceFront(tradeQty);
+
+                if (askLevel.empty())
+                    asks.erase(askIt);
+            }
+
+            return;
+        }
+
+        while (order.quantity > 0 && !bids.empty())
+        {
+            auto bidIt = bids.begin();
+            PriceLevel& bidLevel = bidIt->second;
+            Order& buyOrder = bidLevel.orders.front();
+
+            const uint64_t tradeQty = std::min(order.quantity, buyOrder.quantity);
+
+            trades.push_back({
+                buyOrder.id,
+                order.id,
+                bidIt->first,
+                tradeQty,
+                std::chrono::steady_clock::now()
+                });
+
+            order.quantity -= tradeQty;
+            bidLevel.reduceFront(tradeQty);
+
+            if (bidLevel.empty())
+                bids.erase(bidIt);
+        }
     }
 
     // ============================================================

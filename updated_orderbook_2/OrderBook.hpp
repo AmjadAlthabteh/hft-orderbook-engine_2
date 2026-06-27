@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <chrono>
 #include <functional>
-#include <optional>
 #include <iostream>
 #include <utility>
 
@@ -177,6 +176,7 @@ namespace hft
         std::vector<Trade> trades;
 
         void matchOrders();
+        void executeMarketOrder(Order order);
     };
 
 } // namespace hft
