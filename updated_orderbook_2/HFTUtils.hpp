@@ -84,6 +84,34 @@ namespace hft
         return Clock::now();
     }
 
+    template <typename Func>
+    [[nodiscard]]
+    inline uint64_t measureLatency(Func&& func) noexcept
+    {
+        const auto start = Clock::now();
+
+        func();
+
+        const auto end = Clock::now();
+
+        return std::chrono::duration_cast<
+            std::chrono::nanoseconds>(end - start).count();
+    }
+
+    template <typename Func>
+    inline uint64_t runBenchmark(Func&& func, size_t iterations) noexcept
+    {
+        const auto start = Clock::now();
+
+        for (size_t i = 0; i < iterations; ++i)
+            func();
+
+        const auto end = Clock::now();
+
+        return std::chrono::duration_cast<
+            std::chrono::microseconds>(end - start).count();
+    }
+
     // ============================================================
     // LATENCY TIMER CLASS
     // ============================================================
