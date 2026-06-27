@@ -7,6 +7,8 @@ a modular C++20 price-time FIFO matching engine with performance benchmarking to
 Features:
 - Limit order book
 - Matching engine
+- Market and limit order support
+- Configurable submission risk limits
 - VWAP calculation
 - Benchmark utilities
 - Cache-aligned structures

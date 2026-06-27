@@ -1,4 +1,5 @@
 #include "MatchingEngine.hpp"
+#include "HFTUtils.hpp"
 #include <iostream>
 
 namespace hft
@@ -31,6 +32,9 @@ namespace hft
                 - Pass to matching engine thread
         */
 
+        if (!validateSubmission(type, price, quantity))
+            return 0;
+
         uint64_t orderId = nextOrderId.fetch_add(1, std::memory_order_relaxed);
 
         Order order(orderId, side, type, price, quantity);
@@ -38,6 +42,33 @@ namespace hft
         orderBook.addOrder(std::move(order));
 
         return orderId;
+    }
+
+    void MatchingEngine::setRiskLimits(RiskLimits limits) noexcept
+    {
+        riskLimits = limits;
+    }
+
+    const MatchingEngine::RiskLimits& MatchingEngine::getRiskLimits() const noexcept
+    {
+        return riskLimits;
+    }
+
+    bool MatchingEngine::validateSubmission(OrderType type,
+        double price,
+        uint64_t quantity) const noexcept
+    {
+        if (type == OrderType::Market)
+        {
+            return riskLimits.allowMarketOrders
+                && quantity > 0
+                && quantity <= riskLimits.maxQuantity;
+        }
+
+        return validateOrder(price,
+            quantity,
+            riskLimits.maxPrice,
+            riskLimits.maxQuantity);
     }
 
     const std::vector<Trade>& MatchingEngine::getTrades() const

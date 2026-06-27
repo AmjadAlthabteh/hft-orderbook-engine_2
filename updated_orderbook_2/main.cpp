@@ -29,6 +29,8 @@ int main()
     std::cout << "====================================\n";
 
     MatchingEngine engine;
+    engine.setRiskLimits({ 10'000.0, 10'000, true });
+
     LatencyTimer timer;
 
     // Start latency measurement
@@ -46,6 +48,7 @@ int main()
 
     engine.submitOrder(Side::Buy, OrderType::Limit, 101.0, 600);
     engine.submitOrder(Side::Sell, OrderType::Limit, 99.0, 350);
+    engine.submitOrder(Side::Buy, OrderType::Market, 0.0, 100);
 
     timer.stop();
 

@@ -30,6 +30,13 @@ namespace hft
     {
     public:
 
+        struct RiskLimits
+        {
+            double maxPrice{ 1'000'000.0 };
+            uint64_t maxQuantity{ 1'000'000 };
+            bool allowMarketOrders{ true };
+        };
+
         MatchingEngine();
 
         // Submit order (auto ID generation)
@@ -37,6 +44,10 @@ namespace hft
             OrderType type,
             double price,
             uint64_t quantity);
+
+        void setRiskLimits(RiskLimits limits) noexcept;
+
+        const RiskLimits& getRiskLimits() const noexcept;
 
         // Access trades
         const std::vector<Trade>& getTrades() const;
@@ -54,6 +65,11 @@ namespace hft
 
         // Thread-safe ID generator
         std::atomic<uint64_t> nextOrderId;
+        RiskLimits riskLimits;
+
+        bool validateSubmission(OrderType type,
+            double price,
+            uint64_t quantity) const noexcept;
 
     };
 
