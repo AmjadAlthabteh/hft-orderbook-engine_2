@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(updated_orderbook_2
     HFTAlgorithms.cpp
     HFTUtils.cpp
-    MachingEngine.cpp
+    MatchingEngine.cpp
     OrderBook.cpp
     main.cpp
 )
