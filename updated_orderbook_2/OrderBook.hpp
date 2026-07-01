@@ -142,27 +142,27 @@ namespace hft
         void addOrder(Order order);
 
         // Matching engine trigger
-        std::vector<Trade> match();
+        [[nodiscard]] std::vector<Trade> match();
 
-        const std::vector<Trade>& getTrades() const noexcept;
+        [[nodiscard]] const std::vector<Trade>& getTrades() const noexcept;
 
         // Market data
-        double getBestBid() const;
-        double getBestAsk() const;
-        double getSpread() const;
-        double getMidPrice() const;
+        [[nodiscard]] double getBestBid() const;
+        [[nodiscard]] double getBestAsk() const;
+        [[nodiscard]] double getSpread() const;
+        [[nodiscard]] double getMidPrice() const;
 
-        uint64_t getTotalBidVolume() const;
-        uint64_t getTotalAskVolume() const;
+        [[nodiscard]] uint64_t getTotalBidVolume() const;
+        [[nodiscard]] uint64_t getTotalAskVolume() const;
 
-        double calculateVWAP() const;
+        [[nodiscard]] double calculateVWAP() const;
 
         // Output
         void printTopOfBook() const;
         void printFullDepth() const;
 
         // Utilities
-        bool empty() const;
+        [[nodiscard]] bool empty() const;
         void clear();
 
     private:
