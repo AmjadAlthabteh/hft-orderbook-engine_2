@@ -40,22 +40,22 @@ namespace hft
         MatchingEngine();
 
         // Submit order (auto ID generation)
-        uint64_t submitOrder(Side side,
+        [[nodiscard]] uint64_t submitOrder(Side side,
             OrderType type,
             double price,
             uint64_t quantity);
 
         void setRiskLimits(RiskLimits limits) noexcept;
 
-        const RiskLimits& getRiskLimits() const noexcept;
+        [[nodiscard]] const RiskLimits& getRiskLimits() const noexcept;
 
         // Access trades
-        const std::vector<Trade>& getTrades() const;
+        [[nodiscard]] const std::vector<Trade>& getTrades() const;
 
         // Market data access
         void printTopOfBook() const;
         void printFullDepth() const;
-        const OrderBook& getOrderBook() const noexcept;
+        [[nodiscard]] const OrderBook& getOrderBook() const noexcept;
 
         void reset();
 
