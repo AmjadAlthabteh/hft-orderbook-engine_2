@@ -42,7 +42,7 @@ namespace hft
     double HFTAlgorithms::computeMomentum(const std::vector<Trade>& trades,
         size_t lookback)
     {
-        if (trades.empty())
+        if (trades.empty() || lookback == 0)
             return 0.0;
 
         size_t start =

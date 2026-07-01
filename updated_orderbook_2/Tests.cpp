@@ -52,6 +52,16 @@ namespace
         assert(engine.getTrades().empty());
         assert(engine.getOrderBook().empty());
     }
+
+    void analyticsHandleZeroLookback()
+    {
+        MatchingEngine engine;
+
+        engine.submitOrder(Side::Sell, OrderType::Limit, 100.0, 10);
+        engine.submitOrder(Side::Buy, OrderType::Limit, 100.0, 10);
+
+        assert(HFTAlgorithms::computeMomentum(engine.getTrades(), 0) == 0.0);
+    }
 }
 
 int main()
@@ -59,6 +69,7 @@ int main()
     limitOrdersMatchAtRestingAsk();
     marketOrdersConsumeBestPriceFirst();
     riskLimitsRejectInvalidOrders();
+    analyticsHandleZeroLookback();
 
     return 0;
 }
