@@ -53,6 +53,9 @@ namespace hft
         double maxPrice,
         uint64_t maxQty)
     {
+        if (!std::isfinite(price) || !std::isfinite(maxPrice))
+            return false;
+
         if (price <= 0.0 || quantity == 0)
             return false;
 

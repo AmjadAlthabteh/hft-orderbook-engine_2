@@ -2,6 +2,7 @@
 #include "MatchingEngine.hpp"
 
 #include <cassert>
+#include <limits>
 
 using namespace hft;
 
@@ -62,6 +63,21 @@ namespace
 
         assert(HFTAlgorithms::computeMomentum(engine.getTrades(), 0) == 0.0);
     }
+
+    void riskLimitsRejectNonFinitePrices()
+    {
+        MatchingEngine engine;
+
+        assert(engine.submitOrder(Side::Buy,
+            OrderType::Limit,
+            std::numeric_limits<double>::quiet_NaN(),
+            10) == 0);
+        assert(engine.submitOrder(Side::Buy,
+            OrderType::Limit,
+            std::numeric_limits<double>::infinity(),
+            10) == 0);
+        assert(engine.getOrderBook().empty());
+    }
 }
 
 int main()
@@ -70,6 +86,7 @@ int main()
     marketOrdersConsumeBestPriceFirst();
     riskLimitsRejectInvalidOrders();
     analyticsHandleZeroLookback();
+    riskLimitsRejectNonFinitePrices();
 
     return 0;
 }
