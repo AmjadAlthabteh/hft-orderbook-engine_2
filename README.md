@@ -35,3 +35,11 @@ cmake --build build
 cmake --build build --target updated_orderbook_tests
 .\build\updated_orderbook_tests.exe
 ```
+
+## Project Layout
+
+- `OrderBook.*`: price levels, matching, trades, and market data
+- `MatchingEngine.*`: order submission, risk limits, and order IDs
+- `HFTAlgorithms.*`: analytics helpers for book and trade data
+- `HFTUtils.*`: timing, validation, and performance utilities
+- `Tests.cpp`: regression tests for core matching behavior
