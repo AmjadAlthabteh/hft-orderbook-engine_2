@@ -36,19 +36,19 @@ namespace hft
 
 
 
-    inline bool almostEqual(double a, double b, double eps = EPSILON)
+    [[nodiscard]] inline bool almostEqual(double a, double b, double eps = EPSILON)
     {
         return std::fabs(a - b) < eps;
     }
 
 
-    inline double normalizeToTick(double price, double tickSize)
+    [[nodiscard]] inline double normalizeToTick(double price, double tickSize)
     {
         return std::round(price / tickSize) * tickSize;
     }
 
 
-    inline bool validateOrder(double price,
+    [[nodiscard]] inline bool validateOrder(double price,
         uint64_t quantity,
         double maxPrice,
         uint64_t maxQty)
@@ -66,7 +66,7 @@ namespace hft
     }
 
 
-    inline double computeVWAP(double totalValue,
+    [[nodiscard]] inline double computeVWAP(double totalValue,
         uint64_t totalVolume)
     {
         if (totalVolume == 0)
@@ -82,7 +82,7 @@ namespace hft
     using Clock = std::chrono::high_resolution_clock;
     using TimePoint = std::chrono::time_point<Clock>;
 
-    inline TimePoint now()
+    [[nodiscard]] inline TimePoint now()
     {
         return Clock::now();
     }
@@ -102,7 +102,7 @@ namespace hft
     }
 
     template <typename Func>
-    inline uint64_t runBenchmark(Func&& func, size_t iterations) noexcept
+    [[nodiscard]] inline uint64_t runBenchmark(Func&& func, size_t iterations) noexcept
     {
         const auto start = Clock::now();
 
@@ -133,17 +133,17 @@ namespace hft
             endTime = Clock::now();
         }
 
-        double elapsedNanoseconds() const
+        [[nodiscard]] double elapsedNanoseconds() const
         {
             return std::chrono::duration<double, std::nano>(endTime - startTime).count();
         }
 
-        double elapsedMicroseconds() const
+        [[nodiscard]] double elapsedMicroseconds() const
         {
             return std::chrono::duration<double, std::micro>(endTime - startTime).count();
         }
 
-        double elapsedMilliseconds() const
+        [[nodiscard]] double elapsedMilliseconds() const
         {
             return std::chrono::duration<double, std::milli>(endTime - startTime).count();
         }
@@ -157,7 +157,7 @@ namespace hft
     // PNL CALCULATOR
     // ============================================================
 
-    inline double calculatePnL(double entryPrice,
+    [[nodiscard]] inline double calculatePnL(double entryPrice,
         double exitPrice,
         uint64_t quantity,
         bool isLong)
@@ -184,7 +184,7 @@ namespace hft
             ++counter.value;
         }
 
-        uint64_t get() const
+        [[nodiscard]] uint64_t get() const
         {
             return counter.value;
         }
