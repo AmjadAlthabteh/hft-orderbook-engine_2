@@ -12,3 +12,17 @@ add_executable(updated_orderbook_2
     OrderBook.cpp
     main.cpp
 )
+
+include(CTest)
+
+if(BUILD_TESTING)
+    add_executable(updated_orderbook_tests
+        HFTAlgorithms.cpp
+        HFTUtils.cpp
+        MatchingEngine.cpp
+        OrderBook.cpp
+        Tests.cpp
+    )
+
+    add_test(NAME updated_orderbook_tests COMMAND updated_orderbook_tests)
+endif()
