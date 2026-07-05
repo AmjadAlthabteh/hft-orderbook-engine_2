@@ -10,10 +10,8 @@
 #include <utility>
 
 /*
-    ==========================================================
-                    HIGH FREQUENCY ORDER BOOK
-    ==========================================================
-
+                     HIGH FREQUENCY ORDER BOOK
+ 
     Realistic limit order book implementing:
 
     ? Separate bid / ask books
@@ -51,10 +49,8 @@ namespace hft
         Limit
     };
 
-    // ============================================================
-    // ORDER STRUCT
-    // ============================================================
-
+     // ORDER STRUCT
+ 
     struct Order
     {
         uint64_t id;
@@ -81,10 +77,8 @@ namespace hft
         }
     };
 
-    // ============================================================
-    // TRADE STRUCT
-    // ============================================================
-
+     // TRADE STRUCT
+ 
     struct Trade
     {
         uint64_t buyOrderId;
@@ -94,10 +88,8 @@ namespace hft
         std::chrono::steady_clock::time_point timestamp;
     };
 
-    // ============================================================
-    // PRICE LEVEL
-    // ============================================================
-
+     // PRICE LEVEL
+ 
     struct PriceLevel
     {
         std::deque<Order> orders;
@@ -128,10 +120,8 @@ namespace hft
         }
     };
 
-    // ============================================================
-    // ORDER BOOK
-    // ============================================================
-
+     // ORDER BOOK
+ 
     class OrderBook
     {
     public:
